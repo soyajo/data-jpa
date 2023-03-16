@@ -253,4 +253,34 @@ class MemberRepositoryTest {
         assertThat(resultCount).isEqualTo(3);
 
     }
+
+    @Test
+    public void findMemberLazy() throws Exception {
+        // given - 설정
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB ");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        // when - 로직실행
+        // N + 1
+        //select member 1
+        List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            System.out.println("member.getUsername() = " + member.getUsername());
+            System.out.println("member.teamClass() = " + member.getTeam().getClass());
+            System.out.println("team.name() = " + member.getTeam().getName());
+        }
+
+
+        // then - 결과
+
+    }
 }
