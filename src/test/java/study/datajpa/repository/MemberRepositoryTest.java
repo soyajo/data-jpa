@@ -10,6 +10,8 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,5 +136,35 @@ class MemberRepositoryTest {
         }
     }
 
+    @Test
+    public void findByNames() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
 
+        List<Member> usernameList = memberRepository.findNames(Arrays.asList(m1.getUsername(), m2.getUsername()));
+        for (Member member : usernameList) {
+            System.out.println("member = " + member);
+        }
+    }
+
+    @Test
+    public void returnType() {
+        Member m1 = new Member("ccc", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        // null -> 빈 리스트 반환
+        List<Member> list = memberRepository.findListByUsername("AAA");
+        System.out.println("list.size() = " + list.size());
+        // null -> null 반환
+        // 두개 이상 시 -> exception 반환
+        Member member = memberRepository.findMemberByUsername("ccc");
+        System.out.println("member = " + member);
+        // null -> Optional.empty 반환
+        // 두개 이상 시 -> exception 반환
+        Optional<Member> optional = memberRepository.findOptiionalByUsername("ccc");
+        System.out.println("optional = " + optional);
+    }
 }
