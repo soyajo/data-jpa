@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ class MemberRepositoryTest {
 
     @Test
     public void testMember() {
-        Member member = new Member("memberA");
+        Member member = new Member("memberA", 10,new Team("teamA"));
         Member savedMember = memberRepository.save(member);
 
         Member findMember = memberRepository.findById(member.getId()).get();

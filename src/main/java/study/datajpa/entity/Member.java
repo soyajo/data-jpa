@@ -20,13 +20,20 @@ public class Member {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    public Member(String userName) {
+        this.userName = userName;
+    }
+
     public void changeTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);
     }
 
-    public Member(String userName, int age) {
+    public Member(String userName, int age,Team team) {
         this.userName = userName;
         this.age = age;
+        if (team != null) {
+            changeTeam(team);
+        }
     }
 }
