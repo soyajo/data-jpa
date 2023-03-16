@@ -1,5 +1,8 @@
 package study.datajpa.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
@@ -39,6 +42,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findOptiionalByUsername(String username); //단건 Optional
 
-
-
+    /**
+     * totalCount 쿼리 성능 이슈 해결
+     * 원인 - 조인할 때 totalCount 쿼리도 조인이 되버린다.
+     * 해결 @Query 를 이용하여 조인을 못하도록 막는다.
+     */
+    @Query(value = "select m from Member m", countQuery = "select count(m.username) from Member m")
+    Page<Member> findByAge(int age, Pageable pageable);
 }
