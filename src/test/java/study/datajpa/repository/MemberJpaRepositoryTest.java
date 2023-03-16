@@ -30,10 +30,11 @@ class MemberJpaRepositoryTest {
 
     @Test
     public void testMember() {
+        System.out.println("memberJpaRepository.getClass() = " + memberJpaRepository.getClass());
         Member member = new Member( "memberA");
         Member savedMember = memberJpaRepository.save(member);
 
-        Member findMember = memberJpaRepository.find(savedMember.getId()).get();
+        Member findMember = memberJpaRepository.findById(savedMember.getId()).get();
 
 
         assertThat(findMember.getId()).isEqualTo(member.getId());
@@ -51,8 +52,8 @@ class MemberJpaRepositoryTest {
         memberJpaRepository.save(member2);
 
         //단건 조회 검증
-        Member findMember1 = memberJpaRepository.find(member1.getId()).get();
-        Member findMember2 = memberJpaRepository.find(member2.getId()).get();
+        Member findMember1 = memberJpaRepository.findById(member1.getId()).get();
+        Member findMember2 = memberJpaRepository.findById(member2.getId()).get();
         assertThat(findMember1).isEqualTo(member1);
         assertThat(findMember2).isEqualTo(member2);
 
@@ -70,5 +71,19 @@ class MemberJpaRepositoryTest {
         long deletedCount = memberRepository.count();
         assertThat(deletedCount).isEqualTo(0);
 
+    }
+
+    @Test
+    public void findByUsernameAndAgeGreaterThen() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("AAA", 20);
+        memberJpaRepository.save(m1);
+        memberJpaRepository.save(m2);
+
+        List<Member> result = memberJpaRepository.findByUserNameAndAgeGreaterThan("AAA", 15);
+
+        assertThat(result.get(0).getUserName()).isEqualTo("AAA");
+        assertThat(result.get(0).getAge()).isEqualTo(20);
+        assertThat(result.size()).isEqualTo(1);
     }
 }
