@@ -4,7 +4,6 @@ import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.*;
 
 import org.springframework.data.repository.query.Param;
@@ -14,7 +13,7 @@ import study.datajpa.entity.Member;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> , MemberReopsitoryCustom{
 
     List<Member> findByUsernameAndAgeGreaterThan(String userName, int age);
 
@@ -98,5 +97,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Member> findLockByUsername(String username);
+
+
 
 }
