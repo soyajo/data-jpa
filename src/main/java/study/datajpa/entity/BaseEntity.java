@@ -9,7 +9,17 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
-
+/**
+ * DataJpaApplication 에 설정 해야함.
+ *
+ * @EnableJpaAuditing
+ *
+ * @Bean
+ * public AuditorAware<String> auditorProvider() {
+ *  return () -> Optional.of(UUID.randomUUID().toString());
+ * }
+ *
+ */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
