@@ -89,7 +89,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> , MemberRe
     @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value = "true"))
     Member findReadOnlyByUsername(String username);
 
-
     /**
      * 실시간 서비스에는 락을 걸면 안된다.
      * @param username
@@ -98,10 +97,26 @@ public interface MemberRepository extends JpaRepository<Member, Long> , MemberRe
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Member> findLockByUsername(String username);
 
-
     List<UsernameOnlyDto> findProjectionsByUsername(@Param("username") String username);
     <T> List<T> findProjectionsByUsername(@Param("username") String username, Class<T> type);
 
+    /**
+     * nativeQuery - 사용하지말자..
+     * 하지말고 myBatis 로 가던가 하자.
+     * 진짜 쿼리가 짜기 힘들 때 사용
+     * 제약 sort 파라미터 불확실
+     * 로딩 시점에는 문법 확인 불가 !!!! (중요)
+     * 동적 쿼리 불가
+     *
+     * @param username
+     * @return
+     */
+    @Query(value = "select * from member where username = ?", nativeQuery = true)
+    Member findByNativeQuery(String username);
 
-
+    @Query(value = "select m.member_id as id, m.username , t.name as teamName" +
+            " from member m left join team t",
+            countQuery = "select count(*) from member",
+            nativeQuery = true)
+    Page<MemberProjection> findByNativeProjection(Pageable pageable);
 }
